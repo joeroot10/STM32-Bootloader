@@ -45,8 +45,8 @@ void BootLoaderMenu(void);
 
 #define         _DWN_IMAGE_TO_INFLASH   " Download Image to the STM32 Internal Flash  =========== %d\r\n\r\n"
 #define         _UPD_IMAGE_FR_INFLASH   " Upload Image From the STM32 Internal Flash  =========== %d\r\n\r\n"
-#define         _DWN_PATCH_TO_EXFLASH   " Download Patch to the STM32 External Flash  =========== %d\r\n\r\n"
-#define         _UPD_PATCH_TO_EXFLASH   " Bspatch  Patch to the STM32 External Flash  =========== %d\r\n\r\n"
+#define         _DWN_PATCH_TO_INFLASH   " Download Patch to the STM32 Internal Flash  =========== %d\r\n\r\n"
+#define         _UPD_PATCH_TO_INFLASH   " Bspatch  Patch to the STM32 Internal Flash  =========== %d\r\n\r\n"
 #define         _EXECUTE_NEW_PROGRAM    " Execute The New Program  ================================== %d\r\n\r\n"
 #define         _BOOTLOAD_TAIL_STR      "==============================================================\r\n\r\n"
 #define         _INPUT_BOOTLOADER_STR   "\r\nPlease choose (%d~%d):"
@@ -73,10 +73,10 @@ static void UsartRxTimer(void);
 
 // flash addr
 #define         _FLASH_BASE_ADDR           (0x08000000)
-// bootloader 地址及大小
+// bootloader 地址及大�?
 #define         _BOOTLOADER_ADDR            _FLASH_BASE_ADDR
 #define         _BOOTLOADER_SIZE           (1024*8)
-// app 地址及大小
+// app 地址及大�?
 #define         _APP_SIZE                  (1024*64)
 #define         _APP_ADDR                  (_BOOTLOADER_ADDR+_BOOTLOADER_SIZE)
 

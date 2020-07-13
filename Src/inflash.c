@@ -45,12 +45,12 @@ static unsigned char ymode_image_inflash( pYmodemMSG pymodemsg )
         break ;
     case _FILE_SUCCESS_MSG :    // 传输成功标识
         CreateUpImageMagic(_IMAGE_MAGIC_ADDR,_FILE_LOCAL_IMAGE,128);
-        BootLoaderMenu();  // 重新开始
+        BootLoaderMenu();  // 重新开�?
         return 0 ;
         break ;
     default:
         ClearUpMagic( _IMAGE_MAGIC_ADDR ) ;
-        BootLoaderMenu();  // 重新开始
+        BootLoaderMenu();  // 重新开�?
         break;
     }
     return 1 ;
@@ -111,12 +111,12 @@ static unsigned char ymode_patch_inflash( pYmodemMSG pymodemsg )
         break ;
     case _FILE_SUCCESS_MSG :    // 传输成功标识
         CreateUpImageMagic(_PATCH_MAGIC_ADDR,_FILE_LOCAL_IMAGE,128);
-        BootLoaderMenu();  // 重新开始
+        BootLoaderMenu();  // 重新开�?
         return 0 ;
         break ;
     default:
         ClearUpMagic( _PATCH_MAGIC_ADDR ) ;
-        BootLoaderMenu();  // 重新开始
+        BootLoaderMenu();  // 重新开�?
         break;
     }
     return 1 ;
@@ -167,7 +167,7 @@ uint32_t inflash_reads(uint32_t Addr , uint8_t *pOutBuff , uint32_t len)
 }
 
 
-// ymode 以 1024Byte or 128Byte 传输为单位,所以可以一页一页的檫除及写入
+// ymode �?1024Byte or 128Byte 传输为单�?所以可以一页一页的檫除及写�?
 static HAL_StatusTypeDef inflash_erase( uint32_t pageAddr ,  uint32_t size )
 {
     HAL_StatusTypeDef status ;

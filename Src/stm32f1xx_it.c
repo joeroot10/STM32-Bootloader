@@ -179,7 +179,7 @@ void PendSV_Handler(void)
 /**
   * @brief This function handles System tick timer.
   */
-extern void HAL_TickHdlr(void) ; 
+extern void HAL_TickHdlr(void);  
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
@@ -187,8 +187,9 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
-  HAL_TickHdlr();
+
   /* USER CODE END SysTick_IRQn 1 */
+  HAL_TickHdlr();
 }
 
 /******************************************************************************/
@@ -201,9 +202,15 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles USART1 global interrupt.
   */
- extern void _USART1_IRQ(void);
+extern void _USART1_IRQ(void);  
 void USART1_IRQHandler(void)
 {
+  /* USER CODE BEGIN USART1_IRQn 0 */
+
+  /* USER CODE END USART1_IRQn 0 */
+  /* USER CODE BEGIN USART1_IRQn 1 */
+
+  /* USER CODE END USART1_IRQn 1 */
   _USART1_IRQ();
 }
 

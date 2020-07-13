@@ -14,7 +14,7 @@
 #include <stdarg.h>
 #include "usrUsart.h"
 
-#define         _USART_TX_BUFF_SIZE         (128)
+#define         _USART_TX_BUFF_SIZE         (1024)
 static unsigned char gTXBuff[_USART_TX_BUFF_SIZE];
 LoopArry    gTxLoopBuff ;
 static unsigned char gTXSendIng = 0;
@@ -134,7 +134,7 @@ void _USART1_IRQ(void)
         usrLoopArryPush( &gRxLoopBuff,&usart_data_r,sizeof(usart_data_r));
         ymodem_rev_data(&usart_data_r , sizeof(usart_data_r) );
     }
-    //
+#if 1
     if(LL_USART_IsActiveFlag_TXE(USART1))   // tX
     {
         if( usrLoopArryPop( &gTxLoopBuff,&usart_data_s,sizeof(usart_data_s)))
@@ -147,22 +147,31 @@ void _USART1_IRQ(void)
             LL_USART_DisableIT_TXE(USART1);
             gTXSendIng = 0 ;
         }
-        
     }
+#endif //    
 }
 
 
 
 void MX_USART1_UART_Send_Bytes(unsigned char* pinbuff ,unsigned short len)
 {
-    usrLoopArryPush( &gTxLoopBuff, pinbuff , len );
+    usrLoopArryPush( &gTxLoopBuff, pinbuff , len );    
     if( gTXSendIng ) return ;
     gTXSendIng = 1 ;
+#if 0
+    while( usrLoopArryPop( &gTxLoopBuff,&usart_data_s,sizeof(usart_data_s)))
+    {
+        LL_USART_TransmitData8( USART1 , usart_data_s );
+        while(!LL_USART_IsActiveFlag_TXE( USART1 ));
+    }
+    gTXSendIng = 0 ;
+#else
     if( usrLoopArryPop( &gTxLoopBuff,&usart_data_s,sizeof(usart_data_s)))
     {
         LL_USART_TransmitData8( USART1 , usart_data_s );
         LL_USART_EnableIT_TXE(USART1);
     }
+#endif //    
 }
 
 
@@ -176,3 +185,5 @@ void rt_kprintf(const char *fmt, ...)
 	va_end(vfm);
   MX_USART1_UART_Send_Bytes( (uint8_t*)szData , va_len );
 }
+
+

@@ -77,20 +77,26 @@ void BootLoaderMenu(void)
             mimage_flag = 1 ;
         }
     }
-    // 主界面
-    MX_USART1_UART_Send_Bytes( _BOOTLOAD_HEAD_STR , sizeof(_BOOTLOAD_HEAD_STR) );
+    // 主界�?
+    MX_USART1_UART_Send_Bytes( _BOOTLOAD_HEAD_STR , sizeof(_BOOTLOAD_HEAD_STR) -1  );
+    //
+    //
+    //
     rt_kprintf( _DWN_IMAGE_TO_INFLASH , ++gKeyhandlerInde);
     gKeyHandlerlist[gKeyhandlerInde-1] = dwn_image_to_inflash;   // 
+    
     if( mimage_flag )
     {
         rt_kprintf( _UPD_IMAGE_FR_INFLASH , ++gKeyhandlerInde);
         gKeyHandlerlist[gKeyhandlerInde-1] = upd_image_to_inflash;   // 
     }
-    rt_kprintf( _DWN_PATCH_TO_EXFLASH , ++gKeyhandlerInde);
+    
+    rt_kprintf( _DWN_PATCH_TO_INFLASH , ++gKeyhandlerInde);
     gKeyHandlerlist[gKeyhandlerInde-1] = dwn_patch_to_inflash;   // 
+    
     if( patch_flag )
     {
-        rt_kprintf( _UPD_PATCH_TO_EXFLASH , ++gKeyhandlerInde);
+        rt_kprintf( _UPD_PATCH_TO_INFLASH , ++gKeyhandlerInde);
         gKeyHandlerlist[gKeyhandlerInde-1] = upd_patch_to_inflash;   // 
     }
     //
@@ -98,16 +104,16 @@ void BootLoaderMenu(void)
     {
         rt_kprintf( _EXECUTE_NEW_PROGRAM , ++gKeyhandlerInde);
         gKeyHandlerlist[gKeyhandlerInde-1] = execute_app;   // 
-        // 启动定时器
+        // 启动定时�?
         gInputTimeoutTimerID = CreateTimer(WaitInputTimeout);
         StartTimer(gInputTimeoutTimerID,3*1000);    // 3s
     }
-    MX_USART1_UART_Send_Bytes(_BOOTLOAD_TAIL_STR , sizeof(_BOOTLOAD_TAIL_STR) );
+    MX_USART1_UART_Send_Bytes(_BOOTLOAD_TAIL_STR , sizeof(_BOOTLOAD_TAIL_STR) - 1 );
     rt_kprintf(_INPUT_BOOTLOADER_STR,1,gKeyhandlerInde);
     //
     gDcodeRxTimerID = CreateTimer(UsartRxTimer);
     StartTimer(gDcodeRxTimerID,30);    // 3s
-    Usart1RXTx_Init();                 // 清除缓冲区
+    //Usart1RXTx_Init();                 // 清除缓冲�?
 }
 
 
@@ -133,7 +139,7 @@ uint8_t ClearUpMagic(uint32_t addr )
 */
 static void dwn_image_to_inflash(void)
 {
-    rt_kprintf("===Download Image to the STM32 Internal Flash\r\n");
+    rt_kprintf("\r\n===Download Image to the STM32 Internal Flash\r\n");
     dwn_image_inflash();
 }
 /*
@@ -142,7 +148,7 @@ static void dwn_image_to_inflash(void)
 static void upd_image_to_inflash(void)
 {
     UpdataHeader updatahead = {0x00};
-    rt_kprintf("===Upload Image From the STM32 Internal Flash\r\n");
+    rt_kprintf("\r\n===Upload Image From the STM32 Internal Flash\r\n");
     inflash_reads( _IMAGE_MAGIC_ADDR , &updatahead,sizeof(updatahead));
     if( updatahead.file_type != _FILE_LOCAL_IMAGE )
     {
@@ -156,21 +162,21 @@ static void upd_image_to_inflash(void)
     BootLoaderMenu();
 }
 /*
-    下载差分升级包
+    下载差分升级�?
 */
 static void dwn_patch_to_inflash(void)
 {
-    rt_kprintf("===Upload Path From the STM32 Internal Flash\r\n");
+    rt_kprintf("\r\n===Download Path From the STM32 Internal Flash\r\n");
     dwn_patch_inflash();
 }
 /*
-    更新差分升级包
+    更新差分升级�?
 */
 static void upd_patch_to_inflash(void)
 {
     uint32_t new_size = 0 ;
     UpdataHeader updatahead = {0x00};
-    rt_kprintf("===Bspatch  Patch to the STM32 Internal Flash\r\n");
+    rt_kprintf("\r\n===Bspatch  Patch to the STM32 Internal Flash\r\n");
     
     if( 0 != read_flash(_PATCH_MAGIC_ADDR, 0, 
             (uint8_t *)&updatahead, sizeof(updatahead) ) )
@@ -219,10 +225,11 @@ static void UsartRxTimer(void)
     uint8_t key = 0 ;
     while( usrLoopArryPop( &gRxLoopBuff,&key,sizeof(key)) )
     {
+        MX_USART1_UART_Send_Bytes( &key , 1 );
         if( _IS_DIGIT(key) )
         {
             key -= '0';
-            if( key > 0 && key < gKeyhandlerInde )
+            if( key > 0 && key <= gKeyhandlerInde )
             {
                 if( gKeyHandlerlist[key-1] )
                 {
@@ -250,3 +257,5 @@ uint8_t write_flash( uint32_t addr , uint32_t offset , uint8_t *in , uint32_t si
 {
     return inflash_writes( addr + offset , in , size );
 }
+
+
